@@ -265,10 +265,10 @@ string = pl.read_csv('COG.links.wo_cooccurence.txt', separator=' ',
 string = string.rename({'column_1':'COG1', 'column_2':'COG2', 'column_3':'score'})
 string = string.filter(pl.col('COG1').str.starts_with('COG') & pl.col('COG2').str.starts_with('COG'))
 string = string.with_columns(
-    string.select('COG1', 'COG2').max_horizontal().alias('larger'),
-    string.select('COG1', 'COG2').min_horizontal().alias('smaller')
+   larger = (pl.when(pl.col('COG1') > pl.col('COG2')).then(pl.col('COG1'))).otherwise(pl.col('COG2')),
+   smaller = (pl.when(pl.col('COG1') < pl.col('COG2')).then(pl.col('COG1'))).otherwise(pl.col('COG2'))
 )
-string = string.with_columns((pl.concat_str([pl.col('smaller'), pl.col('larger')], 
+string = string.with_columns((pl.concat_str([pl.col('larger'), pl.col('smaller')], 
                                             separator='_')).alias('COG_pair')).select('COG_pair', 'score')
-string = string.unique('COG_pair')
+string = string.unique()
 string.write_csv('COG.links.wo_cooccurence.txt')

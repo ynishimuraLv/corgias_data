@@ -40,7 +40,7 @@ df = {}
 df_sorted = {}
 df_ppv = {}
 for lin in lineages:
-    df[lin] = pl.read_csv(f'{lin}/scaled_pvalues2.csv').rename({'asa_ML':'asa', 'sev_MP':'sev'})
+    df[lin] = pl.read_csv(f'{lin}/scaled_pvalues.csv').rename({'asa_ML':'asa', 'sev_MP':'sev'})
     df_sorted[lin] = {}
     df_ppv[lin] = {}
     for meth in all_methods:

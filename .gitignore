@@ -2,6 +2,7 @@
 *.ipynb
 *.zip
 COG.links.wo_cooccurence.txt
+cog-20.def.tab
 
 archaea/
 mycobacteriales/

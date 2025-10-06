@@ -338,3 +338,36 @@ fig.legend(handles, labels, loc="center right",
 fig.savefig('FigS18.png', dpi=300, bbox_inches="tight")
 
 # %%
+th = 0.5
+for lin in lineages:
+    tp_sets = df_sorted[lin]
+    detected_all = set()
+    for meth in corgias_methods:
+        detected_all |= set(tp_sets[meth].filter((pl.col('ppv') >= th) & (pl.col('truth') == 1))['COG_pair'])
+        
+    with open(f'{lin}/tp_pairs.txt', encoding='utf-8', mode='w') as outfile:
+        for pair in detected_all:
+            outfile.write(pair + '\n')
+
+# %%
+for lin in lineages:
+    if not os.path.exists(f'{lin}/pastML_tp/'):
+        os.mkdir(f'{lin}/pastML_tp/')
+    cog = pl.read_csv(f'{lin}/COG_table99.csv')
+    cog = cog.rename({'':'genome'})
+    for pair in open(f'{lin}/tp_pairs.txt'):
+        cog1, cog2 = pair.strip().split('_')
+        tmp = cog.select('genome', cog1, cog2)
+        tmp = tmp.with_columns(
+            pl.when((pl.col(cog1) == 1) & (pl.col(cog2) == 1)).then(pl.lit('1'))
+            .when((pl.col(cog1) == 1) & (pl.col(cog2) == 0)).then(pl.lit('2'))
+            .when((pl.col(cog1) == 0) & (pl.col(cog2) == 1)).then(pl.lit('3'))
+            .when((pl.col(cog1) == 0) & (pl.col(cog2) == 0)).then(pl.lit('0'))
+            .otherwise(pl.lit('4')).alias('trait')
+        )
+        tmp.select('genome', 'trait').write_csv(f'{lin}/pastML_tp/{cog1}_{cog2}.csv')
+
+# %%
+cog
+
+# %%

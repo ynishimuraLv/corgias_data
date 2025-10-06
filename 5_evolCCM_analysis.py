@@ -30,7 +30,7 @@ for (lineage in lineages) {
     rownames(cog_table) <- index
     cog_table <- cog_table[, 2:length(colnames(cog_table))]
     
-    lines <- readLines(paste0(lineage, '/tpr07_pairs.txt'))
+    lines <- readLines(paste0(lineage, '/tp_pairs.txt'))
     
     cores <- 12
     cl <- makeCluster(cores)
@@ -49,6 +49,6 @@ for (lineage in lineages) {
         
         c(cog1, cog2, estimate$nlm.par, pvalue)
     }
-    write.csv(result, paste0(lineage, '/evolCCM_tpr07.csv'))
+    write.csv(result, paste0(lineage, '/evolCCM.csv'))
 }
 

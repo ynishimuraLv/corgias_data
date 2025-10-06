@@ -13,16 +13,16 @@
 # ---
 
 # %%
-## Perform phylogenetic profiling
+## Perform phylogenetic profiling by corgias
 
 # %%bash
 dirs=(pseudomonadales mycobacteriales archaea)
 for dir in "${dirs[@]}"; do
     (
         cd $dir &&
-        corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_ML -c 50 --prediction_method ML &&
+        corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_ML -c 50 --prediction_method MPPA &&
         corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_MP -c 50 --prediction_method ACCTRAN &&
-        corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_DOWNPASS -c 50 --prediction_method ACCTRAN &&
+        corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_DOWNPASS -c 50 --prediction_method DOWNPASS &&
         corgias asr -t hq_tree.nwk -d COG_table99.csv -i 0 -s "," -o pastml_DELTRAN -c 50 --prediction_method DELTRAN &&
     )
 done
@@ -40,6 +40,7 @@ for dir in "${dirs[@]}"; do
         for meth in (ML MP DOWNPASS DELTRAN); do
             corgias profiling -m asa -a pastml_${meth} -t hq_tree.nwk -o asa_${meth}.csv -c 50
         done
+        corgias profiling -m asa -a pastml_ML -t hq_tree.nwk -o asawo.csv -c 50 --ignore_branch
 		corgias profiling -m cotr -og COG_table99.csv -t hq_tree.nwk -o cotr.csv -c 50 &&
         for meth in  (MP DOWNPASS DELTRAN); do
             corgias profiling -m sev -a pastml_${meth} -t hq_tree.nwk -o sev_$meth.csv -c 50 --gpu
@@ -60,8 +61,9 @@ for dir in "${dirs[@]}"; do
         for meth in (ML MP DOWNPASS DELTRAN); do
     		corgias stat -m asa_${meth}.csv -m ASA -o asa_${meth}_stat.csv -c 50
         done
+        corgias stat -i asawo.csv -m cwa -o asawo_stat.csv -c 50
 		corgias stat -i cotr.csv -m cotr -o cotr_stat.csv -c 50
-        for meth in (MP DOWNPASS DELTRAN); do
+        for meth in (ML MP DOWNPASS DELTRAN); do
 		    corgias stat -i sev_${meth}.csv -m sev -o sev_${meth}_stat.csv -c 50
         done
     )
@@ -69,6 +71,12 @@ done
 
 
 # %%
+## Perform EvoWeaver phylogenetic profiling
+# %%bash
+Rscript run_EvoWeaver.R
+
+# %%
+import numpy as np
 import polars as pl
 from sklearn.preprocessing import MinMaxScaler
 
@@ -94,7 +102,7 @@ string = pl.read_csv('COG.links.wo_cooccurence.txt')
 
 lineages = ['pseudomonadales', 'mycobacteriales', 'archaea']
 methods = ['naive', 'rle', 'cwa', 'asa_ACCTRAN', 'asa_DOWNPASS', 'asa_DELTRAN', 'asa_ML',
-           'cotr', 'sev_MP', 'sev_DOWNPASS', 'sev_DELTRAN']
+           'asawo', 'cotr', 'sev_MP', 'sev_DOWNPASS', 'sev_DELTRAN']
 replace = { f'column_{i}':meth for i, meth in enumerate(methods)}
 for lineage in lineages:
     df = pl.read_csv(f'{lineage}/naive_stat.csv')
@@ -113,7 +121,21 @@ for lineage in lineages:
     scaler = MinMaxScaler(copy = True)
     scaler.fit(log_pvalue)
     scaled = pl.DataFrame(scaler.transform(log_pvalue))
-    scaled = scaled.rename(repalce)
+    scaled = scaled.rename(replace)
     scaled = scaled.with_columns(df[['COG_pair', 'score', 'truth']])
 
+    evoweaver = pl.read_csv(f'{lineage}/evoweaver.csv')
+    evoweaver = evoweaver.with_columns(
+                    larger = (pl.when(pl.col('Gene1') > pl.col('Gene2')).then(pl.col('Gene1'))).otherwise(pl.col('Gene2')),
+                    smaller = (pl.when(pl.col('Gene1') < pl.col('Gene2')).then(pl.col('Gene1'))).otherwise(pl.col('Gene2'))
+                ).with_columns(
+                    COG_pair = pl.concat_str([pl.col('larger'), pl.col('smaller')], separator='_')
+                ).select('COG_pair', 'PAJaccard', 'PAOverlap', 'GLMI', 'GLDistance')
+
+    scaled = scaled.join(evoweaver, on='COG_pair')
     scaled.write_csv(f'{lineage}/scaled_pvalues.csv')
+
+# %%
+scaled.shape
+
+# %%

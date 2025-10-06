@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 *.ipynb
 *.zip
+COG.links.wo_cooccurence.txt
 
 archaea/
 mycobacteriales/

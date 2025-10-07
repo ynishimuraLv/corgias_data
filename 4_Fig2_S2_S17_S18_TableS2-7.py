@@ -271,46 +271,6 @@ for i, lin in enumerate(lineages):
 fig.savefig('FigS2.png', dpi=300)
 
 # %%
-
-# %%
-evomweaver_asa_sev = ['PAJaccard', 'PAOverlap', 'GLMI', 'GLDistance', 'asa', 'sev']
-fig, axes = plt.subplots(3, 1, figsize=(8.27, 7))
-fig.subplots_adjust(hspace=0.4)
-cmap = plt.get_cmap('Set3', 12)
-for i, lin in enumerate(lineages):
-    bar_width = 0.25
-    x = np.arange(len(num_tp[lin].index))
-    for j, sub_cat in enumerate(evomweaver_asa_sev):
-        if sub_cat == 'GLDistance':
-            c = j + 1
-        elif sub_cat == 'asa':
-            c = j - 1
-        else:
-            c = j
-        axes[i].bar(x*2 + j * bar_width, num_tp[lin][sub_cat], width=bar_width, 
-                    label=replace[sub_cat], color=cmap([c]))
-        axes[i].legend(ncol=2)
-        if lin == 'pseudomonas':
-            title = 'pseudomonadales'
-        else:
-            title = lin
-        axes[i].set_title(title)
-        axes[i].set_xticks(x*2 + bar_width*2.5)
-        axes[i].set_ylabel('No. positive pairs')
-        axes[i].set_xticklabels(num_tp[lin].index)
-        if i == 2:
-            axes[i].set_xticklabels(num_tp[lin].index)
-            axes[i].set_xlabel('True Positive Rate')
-        else:
-            axes[i].set_xticklabels("")
-        axes[i].legend_.remove()
-        
-handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc="center right", 
-           fontsize=12, ncol=1, bbox_to_anchor=(1.12, 0.5))
-fig.savefig('FigS18.png', dpi=300, bbox_inches="tight")
-
-# %%
 th = 0.5
 for lin in lineages:
     tp_sets = df_sorted[lin]
@@ -339,8 +299,5 @@ for lin in lineages:
             .otherwise(pl.lit('4')).alias('trait')
         )
         tmp.select('genome', 'trait').write_csv(f'{lin}/pastML_tp/{cog1}_{cog2}.csv')
-
-# %%
-cog
 
 # %%

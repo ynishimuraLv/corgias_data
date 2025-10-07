@@ -23,6 +23,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
 # %%
+# Fig6
 fig, ax = plt.subplots(1, 2, figsize=(9, ((8.27 / 2))), sharey=True)
 
 times = {
@@ -33,8 +34,8 @@ times = {
     'asa':[75*60+36, 252*60+16, 981*60+41],
     'cotr':[8, 15, 1*60+7, 4*60+1, 15*60+50, 60*60],
     'cotr_gpu':[6, 6, 14, 37, 1*60+56, 7*60+30],
-    'sim':[10, 46, 2*60+25, 8*60+33, 31*60+52, 127*60+25],
-    'sim_gpu':[9, 9, 40, 1*60+21, 6*60+18, 19*60+4]
+    'sev':[10, 46, 2*60+25, 8*60+33, 31*60+52, 127*60+25],
+    'sev_gpu':[9, 9, 40, 1*60+21, 6*60+18, 19*60+4]
 }
 genes = [2000, 4000, 8000, 16000, 32000, 64000]
 
@@ -101,7 +102,7 @@ ax[1].grid()
 ax[1].set_xlabel('Number of species')
 ax[1].legend(loc='center left', bbox_to_anchor=(1, .5))
 plt.tight_layout()
-plt.savefig('Fig5.png', dpi=300)
+#plt.savefig('Fig6.png', dpi=300)
 
 # %%
 methods = {
@@ -250,9 +251,31 @@ t2 = cal_times(np.exp(z_pred[1]))
 print('asa', f'{r2:.3f}', t1, t2, model.coef_, model.intercept_)
 
 # %%
-X
+times = [11*60+23, 16*60+30, 31*60+30, 80*60+4, 171*60+35, 432*60+3,
+         4*60+23, 16*60+30, 73*60+8, 289*60+28]
+
+x = [500, 1000, 2000, 4000, 8000, 16000,
+     1000, 1000, 1000, 1000]
+
+y = [4000, 4000, 4000, 4000, 4000, 4000,
+     2000, 4000, 8000, 16000]
 
 # %%
-z
+log_x = np.log(x)
+log_y = np.log(y)
+X = np.column_stack((log_x, log_y))
+
+z = np.log(times)
+model = LinearRegression()
+model.fit(X, z)
+z_pred = model.predict(X)
+r2 = r2_score(z, z_pred)
+new_x = np.log([107000, 6000])
+new_y = np.log([28000, 61000])
+new_X = np.column_stack((new_x, new_y))
+z_pred = model.predict(new_X)
+t1 = cal_times(np.exp(z_pred[0])/2)
+t2 = cal_times(np.exp(z_pred[1])/2)
+print(f'G/L Distance {r2:.3f}', t1, t2, model.coef_, model.intercept_)
 
 # %%

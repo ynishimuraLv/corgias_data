@@ -17,9 +17,6 @@ import os,shutil,sys
 import numpy as np
 import pandas as pd
 import polars as pl
-from collections import Counter
-import upsetplot
-from venny4py.venny4py import *
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import roc_curve
@@ -89,5 +86,38 @@ for i, lin in enumerate(lineages):
     ax[i].tick_params(axis='both', labelsize=4)
     ax[i].legend(fontsize=6)
     ax[i].grid(linewidth=0.5)
+
+# %%
+ppv05 = {}
+methods = ['naive', 'rle', 'cwa', 'asa_MPPA', 'cotr', 'sev_ACCTRAN']
+top_pairs = {}
+for lin in lineages:
+    top_pairs[lin] = set()
+    for meth in methods:
+        tp = df_sorted[lin][meth].filter(pl.col('ppv') >= 0.5)
+        rank = tp[-1]['rank']
+        tp_pairs = tp.filter((pl.col('rank') <= rank))['COG_pair']
+        top_pairs[lin] |= set(tp_pairs)
+
+# %%
+fig, ax = plt.subplots(3, 2, figsize = (8.27, 9))
+
+for i, lin in enumerate(lineages):
+    ax[i, 0].hist(df[lin].filter(pl.col('score') >= 0)['score'], range=(0, 1000), bins=20)
+    count, _, _ = ax[i, 1].hist(df[lin].filter((pl.col('score') >= 0) & 
+                                               (pl.col('COG_pair').is_in(top_pairs[lin])))['score'],
+                                range=(0, 1000), bins=20)
+    
+    ax[i, 1].vlines(x=900, linestyle='--', ymin=0, ymax=max(count)*1.1, color='red')
+    ax[i, 1].set_ylim(0, max(count)*1.1)
+    ax[i, 0].set_title(f'{lin}: all scored pairs')
+    ax[i, 1].set_title(f'{lin}: Top pairs (TPR ≥ 50%)')
+    if i != 2:
+        ax[i, 0].set_xticklabels('')
+        ax[i, 1].set_xticklabels('')
+    else:
+        ax[i, 0].set_xlabel('STRING score')
+        ax[i, 1].set_xlabel('STRING score')
+fig.savefig('FigS1.png', dpi=300)
 
 # %%

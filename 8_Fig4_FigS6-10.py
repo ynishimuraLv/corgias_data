@@ -81,7 +81,6 @@ def extract_category(both, weighted, transition, category):
 
 cog_class = {
     'A':'RNA PROCESSING AND MODIFICATION',
-    'B':'CHROMATIN STRUCTURE AND DYNAMICS',
     'C':'Energy production and conversion',
     'D':'Cell cycle control, cell division, chromosome partitioning',
     'E':'Amino acid transport and metabolism',
@@ -104,8 +103,6 @@ cog_class = {
     'U':'Intracellular trafficking, secretion, and vesicular transport',
     'W':'Extracellular structures',
     'X':'Mobilome: prophages, transposons',
-    'Y':'Nuclear structure',
-    'Z':'Cytoskeleton'
     }
 
 # %%
@@ -410,7 +407,7 @@ nx.draw_networkx_labels(g, label_pos, labels={node: str(node) for node in g.node
 # plt.savefig('FigS10.png')
 
 # %%
-# Fig S1
+# Fig. S6
 
 a4_width = 8.27
 aspect = 18/40
@@ -422,19 +419,19 @@ for i, lin in enumerate(lineages):
     width = 0.5
     categories = [category for category in cog_class.keys() if category not in 'BYZ']
     for j, category in zip(offset, categories):
-        both_category, weighted_category, sim_category = \
+        both_category, weighted_category, transition_category = \
            extract_category(both[lin], only_weighted[lin], only_transition[lin], category)
         jitter_both = j - 0.3 + np.random.normal(0, 0.05, size=both_category.shape[0])
         jitter_weighted = j + np.random.normal(0, 0.05, size=weighted_category.shape[0])
-        jitter_sim = j + 0.3 + np.random.normal(0, 0.05, size=sim_category.shape[0])
+        jitter_transition = j + 0.3 + np.random.normal(0, 0.05, size=transition_category.shape[0])
         
         if category == 'X' and lin == 'archaea':
             ax[i].scatter(weighted_category['coeff'], jitter_weighted, alpha=0.6, s=2, color='orange', label='only weighted')
-            ax[i].scatter(sim_category['coeff'],jitter_sim,  alpha=0.5, s=2, color='blue', label='only transition')
+            ax[i].scatter(transition_category['coeff'],jitter_transition,  alpha=0.5, s=2, color='blue', label='only transition')
             ax[i].scatter(both_category['coeff'], jitter_both, alpha=0.2, s=2, color='green', label='both')
         else:
             ax[i].scatter(weighted_category['coeff'], jitter_weighted, alpha=0.6, s=2, color='orange')
-            ax[i].scatter(sim_category['coeff'],jitter_sim,  alpha=0.5, s=2, color='blue')
+            ax[i].scatter(transition_category['coeff'],jitter_transition,  alpha=0.5, s=2, color='blue')
             ax[i].scatter(both_category['coeff'], jitter_both, alpha=0.2, s=2, color='green')
     ax[i].invert_yaxis()
     ax[i].set_title(lin)
@@ -444,24 +441,24 @@ ax[0].set_yticks([ i for i in range(1, 47, 2)], [i for i in categories],
 fig.legend(loc="lower center", ncol=3, fontsize=12, markerscale=4)
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.075) 
-plt.savefig('FigS1.png', dpi=300)
+plt.savefig('FigS6.png', dpi=300)
 
 # %%
-# Fig S2
-fig, ax = plt.subplots(4, 7, figsize=(35, 20))
+# Fig. S7
+fig, ax = plt.subplots(4, 6, figsize=(35, 22))
 
 lin = 'pseudomonadales'
 for i, category in enumerate(cog_class.keys()):
     both_category = both[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     weighted_category = only_weighted[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     sev_category = only_transition[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
-    j = i // 7
-    k = i%7
+    j = i // 6
+    k = i%6
     flag = 0
     if sev_category.shape[0] >= 1:
         ax[j, k].scatter(sev_category.select('coeff'),
                          sev_category.select('diff_change'),
-                         label=sim_category.shape[0], s=10, c='blue')
+                         label=sev_category.shape[0], s=10, c='blue')
         flag = 1
     if weighted_category.shape[0] >= 1:
         ax[j, k].scatter(weighted_category.select('coeff'),
@@ -477,27 +474,27 @@ for i, category in enumerate(cog_class.keys()):
     ax[j, k].grid()
     if flag == 1:
         ax[j, k].legend(fontsize=10)
-        
-plt.savefig('FigS2.png', dpi=300)
+
+ax[3, 5].remove()
+plt.savefig('FigS7.png', dpi=300)
 plt.show()
 
 # %%
-# Fig S3
-
-fig, ax = plt.subplots(4, 7, figsize=(35, 20))
+# Fig. S8
+fig, ax = plt.subplots(4, 6, figsize=(35, 22))
 
 lin = 'mycobacteriales'
 for i, category in enumerate(cog_class.keys()):
     both_category = both[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     weighted_category = only_weighted[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     sev_category = only_transition[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
-    j = i // 7
-    k = i%7
+    j = i // 6
+    k = i%6
     flag = 0
     if sev_category.shape[0] >= 1:
         ax[j, k].scatter(sev_category.select('coeff'),
                          sev_category.select('diff_change'),
-                         label=sim_category.shape[0], s=10, c='blue')
+                         label=sev_category.shape[0], s=10, c='blue')
         flag = 1
     if weighted_category.shape[0] >= 1:
         ax[j, k].scatter(weighted_category.select('coeff'),
@@ -513,25 +510,27 @@ for i, category in enumerate(cog_class.keys()):
     ax[j, k].grid()
     if flag == 1:
         ax[j, k].legend(fontsize=10)
-        
-plt.savefig('FigS3.png', dpi=300)
+
+ax[3, 5].remove()
+plt.savefig('FigS8.png', dpi=300)
 plt.show()
 
 # %%
-fig, ax = plt.subplots(4, 7, figsize=(35, 20))
+# Fig. S9
+fig, ax = plt.subplots(4, 6, figsize=(35, 22))
 
 lin = 'archaea'
 for i, category in enumerate(cog_class.keys()):
     both_category = both[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     weighted_category = only_weighted[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
     sev_category = only_transition[lin].filter(pl.col('category1').str.contains(category) | pl.col('category2').str.contains(category))
-    j = i // 7
-    k = i%7
+    j = i // 6
+    k = i%6
     flag = 0
     if sev_category.shape[0] >= 1:
         ax[j, k].scatter(sev_category.select('coeff'),
                          sev_category.select('diff_change'),
-                         label=sim_category.shape[0], s=10, c='blue')
+                         label=sev_category.shape[0], s=10, c='blue')
         flag = 1
     if weighted_category.shape[0] >= 1:
         ax[j, k].scatter(weighted_category.select('coeff'),
@@ -547,8 +546,9 @@ for i, category in enumerate(cog_class.keys()):
     ax[j, k].grid()
     if flag == 1:
         ax[j, k].legend(fontsize=10)
-        
-plt.savefig('FigS4.png', dpi=300)
+
+ax[3, 5].remove()
+#plt.savefig('FigS9.png', dpi=300)
 plt.show()
 
 # %%

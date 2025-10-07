@@ -271,33 +271,6 @@ for i, lin in enumerate(lineages):
 fig.savefig('FigS2.png', dpi=300)
 
 # %%
-evomweaver_asa_sev = ['PAJaccard', 'PAOverlap', 'GLMI', 'asa', 'GLDistance', 'sev']
-replace = {'PAJaccard':'P/A Jaccard', 'PAOverlap':'P/A Overlap', 'GLMI':'G/L MI',
-           'asa':'ASA', 'GLDistance':'G/L Distance', 'sev':'SEV'}
-cmap = plt.get_cmap('Set3', 12)
-fig, ax = plt.subplots(1, 3, figsize = (8.27, 2.5))
-for i, lin in enumerate(lineages):
-    label_dict = {}
-    for j, meth in enumerate(evomweaver_asa_sev):
-        label = meth
-        test = df_sorted[lin][meth].filter(~pl.col('truth').is_null())
-        result = eval_pvalues(test['truth'], test[meth])
-        score = result[5]
-        label = f'{replace[meth]}({score:.3f})'
-        label_dict[meth] = label
-        ax[i].plot(result[3], result[2],  label = label,
-                   linewidth = 1, color=cmap([j]))
-    ax[i].set_title(lin, fontsize=8)
-    ax[i].set_xlabel('Recall', fontsize=7)
-    ax[i].set_ylabel('Presicion', fontsize=7)
-    ax[i].tick_params(axis='both', labelsize=4)
-    ax[i].legend(fontsize=5.5)
-    ax[i].grid(linewidth=0.5)
-    handles, labels = ax[i].get_legend_handles_labels()
-    order = [labels.index(label_dict[meth]) for meth in ['PAJaccard', 'PAOverlap', 'GLMI', 'GLDistance', 'asa', 'sev']]
-    ax[i].legend([handles[i] for i in order], [labels[i] for i in order], fontsize=5.5)
-
-plt.savefig('FigS17.png', dpi = 300)
 
 # %%
 evomweaver_asa_sev = ['PAJaccard', 'PAOverlap', 'GLMI', 'GLDistance', 'asa', 'sev']

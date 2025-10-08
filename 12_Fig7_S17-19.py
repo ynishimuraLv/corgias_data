@@ -53,7 +53,7 @@ for lin in lineages:
             tp = df_sorted[lin][meth].filter(pl.col('ppv') >= th)
             if tp.shape[0] >= 1:
                 rank = tp[-1]['rank']
-                df_ppv[lin][meth][th] = df_sorted[lin][meth].filter(pl.col('rank') <= rank)
+                df_ppv[lin][meth][th] = df_sorted[lin][meth].filter((pl.col('rank') <= rank) & (pl.col('truth') == 1) )
 
 
 # %%
@@ -103,6 +103,7 @@ gs = gridspec.GridSpec(1, 2, width_ratios=[1, 2])
 ax1 = fig.add_subplot(gs[0, 0])
 ax2 = fig.add_subplot(gs[0, 1])
 
+cmap = plt.get_cmap('Set3', 12)
 
 lin = 'pseudomonadales'
 
@@ -228,7 +229,7 @@ for lin in lineages:
         tmp = df_ppv[lin]
         sev = set(tmp['sev'][th]['COG_pair'])
         GLDistance = set(tmp['GLDistance'][th]['COG_pair'])
-        GLDistance_sev = GLDistance.union(sev).difference(sev)
+        GLDistance_sev = GLDistance.intersection(sev)
         only_GLDdistance = GLDistance.difference(sev)
         only_sev = sev.difference(GLDistance)
         subsets = [GLDistance_sev, only_GLDdistance, only_sev ]
@@ -247,7 +248,7 @@ for lin in lineages:
         tmp = df_ppv[lin]
         sev = set(tmp['sev'][th]['COG_pair'])
         GLDistance = set(tmp['GLDistance'][th]['COG_pair'])
-        GLDistance_sev = GLDistance.union(sev).difference(sev)
+        GLDistance_sev = GLDistance.intersection(sev)
         only_GLDdistance = GLDistance.difference(sev)
         only_sev = sev.difference(GLDistance)
         subsets = [GLDistance_sev, only_GLDdistance, only_sev ]
@@ -376,3 +377,5 @@ for i, lin in enumerate(lineages):
     ax[i, 1].set_yticklabels([])
 
 fig.savefig('FigS20.png', dpi=300)
+
+# %%

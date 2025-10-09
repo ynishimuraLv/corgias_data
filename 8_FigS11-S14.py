@@ -147,7 +147,7 @@ for i in range(5):
     ax_text.set_xticks([]); ax_text.set_yticks([])
     
     # 文字列表示
-    ax_text.text(0.5, 0.5, f"TP = {0.9-0.1*i}", ha='center', va='center', fontsize=20)
+    ax_text.text(0.5, 0.5, f"TPR = {0.9-0.1*i}", ha='center', va='center', fontsize=20)
 
 fig.savefig('FigS11', dpi=300)
 plt.show()

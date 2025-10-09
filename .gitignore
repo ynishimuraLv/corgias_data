@@ -1,5 +1,7 @@
 .ipynb_checkpoints
 *.ipynb
+!Reimplement_cotr.ipynb
+Reimplement_cotr.py
 *.zip
 COG.links.wo_cooccurence.txt
 cog-20.def.tab

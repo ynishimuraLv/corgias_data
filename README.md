@@ -42,5 +42,8 @@ bioRxiv, 2025, https://doi.org/10.1101/2025.05.07.652372
             - 2_prepare.ipynb
             - 3_benchmark.ipynb
     - 11_Fig7_S17-S19.py
+- [`cotransitions`](https://github.com/lab83bio/Cotransitions) reimplementation is validated in a following `ipynb` file
+    - A tree and table data in this file can be prepared `simulation/1_simulate_pairs.py`.
+
 
 

@@ -24,7 +24,7 @@ bioRxiv, 2025, https://doi.org/10.1101/2025.05.07.652372
     - 2_phylogenetic_profiling.py
         - run_EvoWeaver.R: A R file used in 2_phylogenetic_profiling.py
 
-**As these procedures needs a large comuptational resource, the resultant files required for downstream analysis can be downloaded from [Zenodo](10.5281/zenodo.15496141)**
+**As these procedures needs a large comuptational resource, the resultant files required for downstream analysis can be downloaded from [Zenodo](10.5281/zenodo.15496141) (not available now)**
 
 - Following files are for reproduction of Figures and Tables in Nishimura et al. `ipynb` files of them are available at [Zenodo](10.5281/zenodo.15496141)
     - 3_FigS1_TableS1.py
@@ -42,7 +42,7 @@ bioRxiv, 2025, https://doi.org/10.1101/2025.05.07.652372
             - 2_prepare.ipynb
             - 3_benchmark.ipynb
     - 11_Fig7_S17-S19.py
-- [`cotransitions`](https://github.com/lab83bio/Cotransitions) reimplementation is validated in a following `ipynb` file
+- [`cotransitions`](https://github.com/lab83bio/Cotransitions) reimplementation in CORGIAS is validated in a `Reimplement_cotr.ipynb`
     - A tree and table data in this file can be prepared `simulation/1_simulate_pairs.py`.
 
 

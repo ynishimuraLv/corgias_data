@@ -58,9 +58,9 @@ for th in thresholds:
                            )
         df_transition[th][lin] = df[th][lin].filter( (pl.col('cotr')) | (pl.col('sev')) ) 
     
-        both[th][lin] = df_weighted[th][lin].filter(pl.col('COG_pair').is_in(df_transition[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-        only_weighted[th][lin] = df_weighted[th][lin].filter(~pl.col('COG_pair').is_in(both[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-        only_transition[th][lin] = df_transition[th][lin].filter(~pl.col('COG_pair').is_in(both[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
+        both[th][lin] = df_weighted[th][lin].filter(pl.col('COG_pair').is_in(set(df_transition[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
+        only_weighted[th][lin] = df_weighted[th][lin].filter(~pl.col('COG_pair').is_in(set(both[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
+        only_transition[th][lin] = df_transition[th][lin].filter(~pl.col('COG_pair').is_in(set(both[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
 
 
 # %%
@@ -102,39 +102,6 @@ def count_lca_transition(tree):
     
     return result
 
-
-# %%
-lineages = ['pseudomonadales', 'mycobacteriales', 'archaea']
-schema = {'naive':pl.Boolean, 'rle':pl.Boolean, 'cwa':pl.Boolean,
-          'asa':pl.Boolean, 'cotr':pl.Boolean, 'sev':pl.Boolean,
-          'COG_pair':pl.String, 'COG1':pl.String, 'COG2':pl.String,
-          'category1':pl.String, 'annot1':pl.String, 'pathway1':pl.String,
-          'category2':pl.String, 'annot2':pl.String, 'pathway2':pl.String,
-          'alpha1':pl.Float64, 'alpha2':pl.Float64, 'beta1':pl.Float64, 'beta2':pl.Float64, 
-          'coeff':pl.Float64, 'pvalue':pl.Float64}
-
-df = {}
-df_weighted = {}
-df_transition = {}
-both = {}
-only_weighted = {}
-only_transition = {}
-for lin in lineages:
-    df[lin] = pl.read_csv(f'{lin}/tpr07_stat.csv', schema=schema).fill_null(False)
-    df_weighted[lin] = df[lin].filter(
-                       (pl.col('naive')) | (pl.col('rle')) | (pl.col('cwa')) | (pl.col('asa'))
-                       )
-    df_transition[lin] = df[lin].filter( (pl.col('cotr')) | (pl.col('sev')) ) 
-
-    both[lin] = df_weighted[lin].filter(pl.col('COG_pair').is_in(df_transition[lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-    only_weighted[lin] = df_weighted[lin].filter(~pl.col('COG_pair').is_in(both[lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-    only_transition[lin] = df_transition[lin].filter(~pl.col('COG_pair').is_in(both[lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-
-# %%
-only_transition[lin].head()
-
-# %%
-only_weighted[lin].head()
 
 # %%
 all_direction = list(permutations(['0', '1', '2', '3', '?'], 2))

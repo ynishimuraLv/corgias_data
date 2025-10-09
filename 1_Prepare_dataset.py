@@ -272,3 +272,22 @@ string = string.with_columns((pl.concat_str([pl.col('larger'), pl.col('smaller')
                                             separator='_')).alias('COG_pair')).select('COG_pair', 'score')
 string = string.unique()
 string.write_csv('COG.links.wo_cooccurence.txt')
+
+# %%
+# Prepare datasets for EvoWeaver
+lineages = ['pseudomonadales', 'mycobacteriales', 'archaea']
+
+for lin in lineages:
+
+    tree = et.Tree(f"{lin}/hq_tree.tre", format=1)
+    for leaf in tree.get_leaves():
+        leaf.name = leaf.name.replace('_', '').replace('.', '')
+    tree.write(outfile=f'{lin}/hq_tree4evoweaver.tree')
+    
+    df = pl.read_csv(f'{lin}/COG_table99.csv')
+    df = df.to_pandas().T
+    df.index.name = 'COG'
+    replace = {i:genome.replace('_', '').replace('.', '') 
+               for i, genome in enumerate(df.iloc[0, :])}
+    df = df[1:].rename(columns=replace)    
+    df.to_csv(f'{lin}/COG_table4evoweaver.csv')

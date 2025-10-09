@@ -3,8 +3,8 @@ library(parallel)
 
 for (org in c('pseudomonadales', 'mycobacteriales', 'archaea')) {
 
-    dend <- ReadDendrogram(paste0(org, '_hq90.tre'))
-    mat <- read.csv(paste0(org, '_COG.csv'),
+    dend <- ReadDendrogram(paste0(org, '/hq_tree4evoweaver.tre'))
+    mat <- read.csv(paste0(org, '/COG_table4evoweaver.csv'),
                     row.names = 1, check.names = FALSE)
     gene_groups <- apply(mat, 1, function(row) colnames(mat)[row == 1])
     ew <- EvoWeaver(gene_groups, MySpeciesTree=dend)

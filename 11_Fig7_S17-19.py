@@ -219,7 +219,7 @@ for i, lin in enumerate(lineages):
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="center right", 
            fontsize=12, ncol=1, bbox_to_anchor=(1.12, 0.5))
-#fig.savefig('FigS18.png', dpi=300, bbox_inches="tight")
+fig.savefig('FigS18.png', dpi=300, bbox_inches="tight")
 
 # %%
 heatmaps = {}

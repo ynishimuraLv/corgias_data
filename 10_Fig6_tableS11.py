@@ -102,7 +102,7 @@ ax[1].grid()
 ax[1].set_xlabel('Number of species')
 ax[1].legend(loc='center left', bbox_to_anchor=(1, .5))
 plt.tight_layout()
-#plt.savefig('Fig6.png', dpi=300)
+plt.savefig('Fig6.png', dpi=300)
 
 # %%
 methods = {
@@ -193,11 +193,6 @@ for meth, time in times.items():
     print(meth, f'{r2:.3f}', t1, t2, model.coef_, model.intercept_)
 
 # %%
-model.predict(new_X)
-
-new_X
-
-# %%
 times = [6*60+27, 25*60+58, 107*60+41, 420*60, 16*60+55, 25*60+58, 48*60+22, 91*60+4, 178*60+44, 354*60+19]
 x = [1000, 1000, 1000, 1000,
      500, 1000, 2000, 4000, 8000, 16000]
@@ -221,9 +216,6 @@ z_pred = model.predict(new_X)
 t1 = cal_times(np.exp(z_pred[0]))
 t2 = cal_times(np.exp(z_pred[1]))
 print('cwa', f'{r2:.3f}', t1, t2, model.coef_, model.intercept_)
-
-# %%
-X.shape
 
 # %%
 times = [75*60+36, 252*60+16, 981*60+41, 120*60+39, 252*60+16, 532*60+38, 1185*60+23]

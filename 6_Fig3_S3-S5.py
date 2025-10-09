@@ -107,6 +107,7 @@ for lin in lineages:
 # Fig. 3
 fig, ax = plt.subplots(2, 1, figsize = (8.27, 6))
 fig.subplots_adjust(hspace=0.3)
+lin = 'archaea'
 for j, th in enumerate(thresholds):
     tp = df_tp[th][lin]
 

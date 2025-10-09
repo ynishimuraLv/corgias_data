@@ -73,9 +73,9 @@ for th in thresholds:
     only_transition[th] = {}
     only_weighted[th] = {}
     for lin in lineages:
-        both[th][lin] = df_weighted[th][lin].filter(pl.col('COG_pair').is_in(df_transition[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-        only_weighted[th][lin] = df_weighted[th][lin].filter(~pl.col('COG_pair').is_in(both[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
-        only_transition[th][lin] = df_transition[th][lin].filter(~pl.col('COG_pair').is_in(both[th][lin]['COG_pair'])).filter(pl.col('coeff') >= 0)
+        both[th][lin] = df_weighted[th][lin].filter(pl.col('COG_pair').is_in(set(df_transition[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
+        only_weighted[th][lin] = df_weighted[th][lin].filter(~pl.col('COG_pair').is_in(set(both[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
+        only_transition[th][lin] = df_transition[th][lin].filter(~pl.col('COG_pair').is_in(set(both[th][lin]['COG_pair']))).filter(pl.col('coeff') >= 0)
 
 # %%
 cog_class = {
@@ -117,9 +117,9 @@ for i, th in enumerate(thresholds):
         if i == 0 and j == 1:
             ax[i, j].remove()
         else:
-            sns.kdeplot(only_transition[th][lin],
+            sns.kdeplot(only_transition[th][lin].to_pandas(),
                         x = 'coeff', fill=True, alpha=0.5, ax=ax[i, j], label='only transition')
-            sns.kdeplot(only_weighted[th][lin],
+            sns.kdeplot(only_weighted[th][lin].to_pandas(),
                         x = 'coeff', fill=True, alpha=0.5, ax=ax[i, j], label='only weighted')
         ax[i, j].set_ylabel('')
         if i == 0:
@@ -176,7 +176,7 @@ plt.scatter(both_category.select('coeff'),
 plt.legend()
 plt.xlabel('Coefficient')
 plt.ylabel('Difference between t1 and t2')
-# plt.savefig('FigS12.png', dpi=300)
+plt.savefig('FigS12.png', dpi=300)
 
 # %%
 th = 0.6
@@ -252,6 +252,6 @@ ax[0].set_yticks([ i for i in range(1, 47, 2)], [i for i in categories],
 fig.legend(loc="lower center", ncol=3, fontsize=12, markerscale=4)
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.075) 
-# plt.savefig('FigS14.png', dpi=300)
+plt.savefig('FigS14.png', dpi=300)
 
 # %%

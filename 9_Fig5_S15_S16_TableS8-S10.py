@@ -173,12 +173,12 @@ for i in range(5):
     ax_text.set_xticks([]); ax_text.set_yticks([])
     
     # 文字列表示
-    ax_text.text(0.5, 0.5, f"TPR = {0.5+0.1*i}", ha='center', va='center', fontsize=12)
+    ax_text.text(0.5, 0.5, f"TPR = {0.5+0.1*i}", ha='center', va='center', fontsize=10)
 
 handles, labels = axes[0, 0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="lower center", 
            fontsize=12, ncol=2, bbox_to_anchor=(0.5, 0.07),)
-plt.savefig('FigS15.png', dpi=300)
+plt.savefig('FigS15.png', dpi=300, )
 
 # %%
 # Fig 5
@@ -261,9 +261,6 @@ for i, th in enumerate(thresholds):
             axes[i, j].set_ylabel('Transition bias', fontsize=10)
         if i == 4:
             axes[i, j].set_xlabel('Transition from/to intermediate state', fontsize=10)
-        
-        if i in [1, 2]:
-            axes[i, j].tick_params(axis='y', which='both', bottom=False, top=False, labelleft=False)
 
 for i in range(5):
     pos = axes[i, 2].get_position()
@@ -274,7 +271,7 @@ for i in range(5):
 
 handles, labels = axes[0, 0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="lower center", 
-           fontsize=12, ncol=2, bbox_to_anchor=(0.5, 0.03),)
+           fontsize=9, ncol=2, bbox_to_anchor=(0.5, 0.03),)
 plt.savefig('FigS16.png', dpi=300)
 
 # %%

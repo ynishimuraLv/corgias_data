@@ -173,7 +173,7 @@ for i in range(5):
     ax_text.set_xticks([]); ax_text.set_yticks([])
     
     # 文字列表示
-    ax_text.text(0.5, 0.5, f"TP = {0.5+0.1*i}", ha='center', va='center', fontsize=12)
+    ax_text.text(0.5, 0.5, f"TPR = {0.5+0.1*i}", ha='center', va='center', fontsize=12)
 
 handles, labels = axes[0, 0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="lower center", 
@@ -266,14 +266,11 @@ for i, th in enumerate(thresholds):
             axes[i, j].tick_params(axis='y', which='both', bottom=False, top=False, labelleft=False)
 
 for i in range(5):
-    # 右端のサブプロットの位置を取得
     pos = axes[i, 2].get_position()
-    # 透明Axesを追加（右に少しスペースを空ける）
     ax_text = fig.add_axes([pos.x1 + 0.01, pos.y0, 0.1, pos.height], frameon=False)
     ax_text.set_xticks([]); ax_text.set_yticks([])
     
-    # 文字列表示
-    ax_text.text(0.5, 0.5, f"TP = {0.5+0.1*i}", ha='center', va='center', fontsize=12)
+    ax_text.text(0.5, 0.5, f"TPR = {0.5+0.1*i}", ha='center', va='center', fontsize=12)
 
 handles, labels = axes[0, 0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="lower center", 

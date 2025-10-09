@@ -14,6 +14,7 @@
 
 # %%
 import polars as pl
+import ete3 as etf
 
 # %%
 df = pl.read_csv('pair4tree1K/1.csv')

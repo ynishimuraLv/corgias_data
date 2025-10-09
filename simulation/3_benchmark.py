@@ -42,11 +42,12 @@
 #     time -f "rle, ${genes} genes: %E" corgias profiling -m rle -og $table -t $tree -o rle_${genes}genes.csv -c 54
 #     time -f "cwa, ${genes} genes: %E" corgias profiling -m cwa -og $table -t $tree -o cwa_${genes}genes.csv -c 54
 #     time -f "asa, ${genes} genes" %E" corgias profiling -m asa -a ML_tree1K_${genes} -t $tree -o asa_${genes}genes.csv -c 54
-#     time -f  cotr(cpu), ${genes} genes: %E" corgias profiling -m cotr -og $table -t $tree -o cotr_${genes}genes_cpu.csv -c 54
-#     time -f  cotr(gpu), ${genes} genes: %E" corgias profiling -m cotr -og $table -t $tree -o cotr_${genes}genes_gpu.csv -c 54 --gpu
-#     time -f  sev(cpu), ${genes} genes: %E" corgias profiling -m sev -a MP_tree1K_${genes} -t $tree -o sev_${genes}genes_cpu.csv -c 54
-#     time -f  sev(gpu), ${genes} genes: %E" corgias profiling -m sev -a MP_tree1K_${genes} -t $tree -o sev_${genes}genes_gpu.csv -c 54 --gpu
+#     time -f "cotr(cpu), ${genes} genes: %E" corgias profiling -m cotr -og $table -t $tree -o cotr_${genes}genes_cpu.csv -c 54
+#     time -f "cotr(gpu), ${genes} genes: %E" corgias profiling -m cotr -og $table -t $tree -o cotr_${genes}genes_gpu.csv -c 54 --gpu
+#     time -f "sev(cpu), ${genes} genes: %E" corgias profiling -m sev -a MP_tree1K_${genes} -t $tree -o sev_${genes}genes_cpu.csv -c 54
+#     time -f "sev(gpu), ${genes} genes: %E" corgias profiling -m sev -a MP_tree1K_${genes} -t $tree -o sev_${genes}genes_gpu.csv -c 54 --gpu
 # done
 # ```
 
 # %%
+# !Rscript run_GLDistance.r

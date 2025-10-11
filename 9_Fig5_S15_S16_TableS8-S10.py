@@ -211,7 +211,7 @@ axes[0].set_ylabel('Transition bias', fontsize=8)
 axes[1].set_xlabel('Transition from/to intermediate state', fontsize=8)
 plt.tight_layout()
 
-plt.savefig('Fig5.png', dpi=300)
+plt.savefig('Fig5.svg', dpi=300)
 
 
 # %%

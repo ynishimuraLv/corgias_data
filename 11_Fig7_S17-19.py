@@ -91,7 +91,7 @@ replace = {'PAJaccard':'P/A Jaccard', 'PAOverlap':'P/A Overlap', 'GLMI':'G/L MI'
            'asa':'ASA', 'GLDistance':'G/L Distance', 'sev':'SEV'}
 
 # %%
-# Fig. S7
+# Fig. 7
 
 # A4サイズ（横: 8.27インチ, 縦: 11.69インチ）
 fig = plt.figure(figsize=(8.27, 2.5)) 
@@ -154,7 +154,7 @@ ax2.set_xticklabels(num_tp[lin].index, fontsize=5.5)
 ax2.set_yticklabels([0, 500, 1000, 1500, 2000, 2500], fontsize=5.5)
 ax2.set_xlabel('True Positive Rate', fontsize=7)
 
-fig.savefig('Fig7.png', dpi=300, bbox_inches="tight")
+fig.savefig('Fig7.svg', dpi=300, bbox_inches="tight")
 
 # %%
 # Fig. S17

@@ -146,11 +146,13 @@ for j, th in enumerate(thresholds):
         pivot_asa_cwa = metrics
     else:
         pivot_asa_cwa = pl.concat([pivot_asa_cwa, metrics])
-    
-sns.stripplot(data=pivot_transition,  x='True Positive Rate', y='coeff', hue='method', size=5, alpha=0.5,
+
+pivot_transition = pd.DataFrame(pivot_transition).rename(columns = {0:'COG_pair', 13:'coeff', 21:'method', 22:'True Positive Rate'})
+pivot_asa_cwa = pd.DataFrame(pivot_asa_cwa).rename(columns = {0:'COG_pair', 13:'coeff', 21:'method', 22:'True Positive Rate'})
+sns.stripplot(data=pd.DataFrame(pivot_transition),  x='True Positive Rate', y='coeff', hue='method', size=5, alpha=0.5,
                   dodge=True, hue_order=["only cotr", "only sev"],
                   order= thresholds, ax=ax[0])
-sns.stripplot(data=pivot_asa_cwa,  x='True Positive Rate', y='coeff', hue='method', size=5, alpha=0.5,
+sns.stripplot(data=pd.DataFrame(pivot_asa_cwa),  x='True Positive Rate', y='coeff', hue='method', size=5, alpha=0.5,
                   dodge=True, hue_order=["only cwa", "only asa"],
                   order= thresholds, ax=ax[1])
 ax[0].set_xlabel("") 
@@ -162,7 +164,10 @@ for i in range(2):
     ax[i].legend(handles, labels,
                loc="center left", bbox_to_anchor=(1, 0.5))
 
-fig.savefig('Fig3.png', dpi=300, bbox_inches="tight")
+fig.savefig('Fig3.svg', dpi=300, bbox_inches="tight")
+
+# %%
+pd.DataFrame(pivot_transition)
 
 # %%
 # Fig. S3
